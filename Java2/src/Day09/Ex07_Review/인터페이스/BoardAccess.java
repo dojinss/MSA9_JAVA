@@ -2,7 +2,7 @@ package Day09.Ex07_Review.인터페이스;
 
 public class BoardAccess implements BoardInterface{
 	
-	int count = 5;
+	int count = 1;
 	Board[] boardList = {
 		new Board("제목 01","작성자 01", "내용 01"),
 		new Board("제목 02","작성자 02", "내용 02"),
@@ -20,15 +20,14 @@ public class BoardAccess implements BoardInterface{
 	 */
 	@Override
 	public Board create(Board board) {
-		
-		int boardNo = count;
+		int boardNo = (count++ -1);
 		board.setNo(boardNo);
 		String regDate = "2024/08/09 - 17:20";
 		String updDate = "2024/08/09 - 17:20";
 		board.setRegDate(regDate);
 		board.setUpdDate(updDate);
 		
-		boardList[count++] = board;
+		boardList[boardNo] = board;
 		System.out.println(board);
 		System.out.println("게시글이 등록 되었습니다.");
 		
@@ -92,10 +91,14 @@ public class BoardAccess implements BoardInterface{
 	public int delete(int no) {
 		if( boardList[no] != null ) {
 			boardList[no] = null;
-			for (int i = (no + 1); i < (boardList.length - 1) ; i++) {
-				boardList[i] = boardList[i+1];
+			if(no != boardList.length) {
+				for (int i = (no + 1); i < (boardList.length - 1) ; i++) {
+					boardList[i] = boardList[i+1];
+				}
 			}
-			boardList[boardList.length-1] = null;
+			else {
+				boardList[boardList.length-1] = null;				
+			}
 			count--;
 			System.out.println("게시글이 삭제 되었습니다.");
 			return 1;
