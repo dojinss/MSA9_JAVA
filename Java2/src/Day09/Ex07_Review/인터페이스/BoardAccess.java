@@ -2,13 +2,13 @@ package Day09.Ex07_Review.인터페이스;
 
 public class BoardAccess implements BoardInterface{
 	
-	int count = 1;
+	int count = 5;
 	Board[] boardList = {
-		new Board("제목 01","작성자 01", "내용 01"),
-		new Board("제목 02","작성자 02", "내용 02"),
-		new Board("제목 03","작성자 03", "내용 03"),
-		new Board("제목 04","작성자 04", "내용 04"),
-		new Board("제목 05","작성자 05", "내용 05")
+		new Board(1, "제목01","작성자01", "내용01", "2020","2020"),
+		new Board(2, "제목02","작성자02", "내용02", "2020","2020"),
+		new Board(3, "제목03","작성자03", "내용03", "2020","2020"),
+		new Board(4, "제목04","작성자04", "내용04", "2020","2020"),
+		new Board(5, "제목05","작성자05", "내용05", "2020","2020")
 	};
 	
 	/**
@@ -20,15 +20,18 @@ public class BoardAccess implements BoardInterface{
 	 */
 	@Override
 	public Board create(Board board) {
-		int boardNo = (count++ -1);
+		if(this.count >= 5) {
+			System.err.println("게시글 목록이 꽉 찼습니다.");
+			return null;
+		}
+		int boardNo = (++count);
 		board.setNo(boardNo);
 		String regDate = "2024/08/09 - 17:20";
 		String updDate = "2024/08/09 - 17:20";
 		board.setRegDate(regDate);
 		board.setUpdDate(updDate);
 		
-		boardList[boardNo] = board;
-		System.out.println(board);
+		boardList[boardNo-1] = board;
 		System.out.println("게시글이 등록 되었습니다.");
 		
 		return board;
@@ -40,8 +43,10 @@ public class BoardAccess implements BoardInterface{
 	 **/
 	@Override
 	public Board[] list() {
-		if( boardList[0] == null )	return null;
-		else						return boardList;
+		if( boardList.length == 0 || this.count == 0 )	
+			return null;
+		else						
+			return boardList;
 	}
 	/**
 	 * 	- 게시글 조회 - 
@@ -51,8 +56,16 @@ public class BoardAccess implements BoardInterface{
 	 */
 	@Override
 	public Board read(int no) {
-		if(boardList[no] == null) 	return null;
-		else 						return boardList[no];
+		if( no > 0 && no < 6) 	
+			return boardList[no-1];
+		else if (boardList[no-1] == null) {
+			System.out.println("게시글이 존재하지 않습니다.");
+			return null;
+		}
+		else {
+			System.out.println("유효하지 않은 글번호입니다.");
+			return null;
+		}
 	}
 	
 	/**
@@ -65,11 +78,11 @@ public class BoardAccess implements BoardInterface{
 	 */
 	@Override
 	public int update(Board board) {
-		if( boardList[board.getNo()] != null ) {
+		int no = board.getNo() - 1;
+		if( boardList[no] != null ) {
 			String updDate = "2024/08/09 - 18:20";
 			board.setUpdDate(updDate);
-			boardList[board.getNo()] = board;
-			System.out.println(board);
+			boardList[no] = board;
 			System.out.println("게시글이 수정 되었습니다.");
 			return 1;
 		}
@@ -89,16 +102,20 @@ public class BoardAccess implements BoardInterface{
 	 */
 	@Override
 	public int delete(int no) {
+		if( boardList == null) {
+			System.out.println("게시글이 없습니다.");
+			return 0;
+		}			
 		if( boardList[no] != null ) {
-			boardList[no] = null;
-			if(no != boardList.length) {
-				for (int i = (no + 1); i < (boardList.length - 1) ; i++) {
+			//boardList[no] = null;
+			if(no <= boardList.length) {
+				for (int i = no; i < (boardList.length-1) ; i++) {
 					boardList[i] = boardList[i+1];
+					if(boardList[i] != null)
+						boardList[i].setNo(i+1);
 				}
 			}
-			else {
-				boardList[boardList.length-1] = null;				
-			}
+			boardList[boardList.length-1] = null;				
 			count--;
 			System.out.println("게시글이 삭제 되었습니다.");
 			return 1;

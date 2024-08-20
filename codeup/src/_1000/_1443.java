@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 오름차순 정렬 및 중복숫자 제거
 
-[ 버블 정렬 방식 ]
+[ 삽입 정렬 방식 ]
 */
 public class _1443 {
 	public static void main(String[] args) {
