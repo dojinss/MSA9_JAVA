@@ -1,5 +1,7 @@
 package _1000;
-
+/*
+ * 오름차순 정렬 (버블 정렬)
+ * */
 import java.util.Scanner;
 
 public class _1441 {
