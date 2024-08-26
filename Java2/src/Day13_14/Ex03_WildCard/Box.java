@@ -1,4 +1,4 @@
-package Day13.Ex01_Generics;
+package Day13_14.Ex03_WildCard;
 
 /**
  *	제네릭 기법으로 클래스 정의
