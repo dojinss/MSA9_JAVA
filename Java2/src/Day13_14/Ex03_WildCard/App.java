@@ -112,6 +112,9 @@ public class App {
 	 * 	수강생 등록
 	 */
 	static void addStudent() {
+		
+		System.out.print("- 과정 종류 (일반인, 직장인, 학생) : ");
+		String courseType = sc.nextLine();
 		System.out.print("- 수강생 종류 (일반인, 직장인, 학생, 중학생, 고등학생) : ");
 		String type = sc.nextLine();
 		System.out.print("- 수강생 이름 : ");
@@ -121,64 +124,47 @@ public class App {
 		
 		Course<?> selectedCourse = new Course<>();
 		
+		Person newStudent = null;
+		
 		for (int i = 0; i < courseList.size(); i++) {
 			Course<?> course = courseList.get(i);
 			
 			// 입력한 과정명과 등록된 과정명이 일치하면
 			if ( course.getName().equals(courseName)) {
 				selectedCourse = course;
+				switch(type) {
+					case "일반인" :
+						newStudent = new Person(name);
+						break;
+					case "직장인" :
+						newStudent = new Worker(name);
+						break;
+					case "학생" :
+						newStudent = new Student(name);
+						break;
+				}
+				
 				break;
 			}
 		}
-		// 선택된 과정에서 수강생 목록을 가져온다.
-		
-		
-				
-		
 		// 수강생 목록에 지금 입력한 수강생을 추가한다.
 		// * 수강생 종류에 맞게 객체를 생성하여 추가한다.
-		switch (type) {
-			case "일반인" -> {
-				Course<Person> course = (Course<Person>) selectedCourse;
-				List<Person> students = (List<Person>)selectedCourse.getStudents();
-				Person student = new Person(name);
-				students.add(student);	
-				studentList.add(student);
+		try {
+			switch (type) {
+			case "일반인" :
+				((Course<Person>) selectedCourse).addStudent(newStudent);
+				break;
+			case "직장인" :
+				((Course<Worker>) selectedCourse).addStudent((Worker)newStudent);
+				break;
+			case "학생" :
+				((Course<Student>) selectedCourse).addStudent((Student)newStudent);
+				break;
 			}
-			case "직장인" -> {
-				Course<Worker> course = (Course<Worker>) selectedCourse;
-				List<Worker> students = (List<Worker>)selectedCourse.getStudents();
-				Worker student = new Worker(name);
-				students.add(student);	
-				studentList.add(student);
-			}
-			case "학생" -> {
-				Course<Student> course = (Course<Student>) selectedCourse;
-				List<Student> students = (List<Student>)selectedCourse.getStudents();
-				Student student = new Student(name);
-				students.add(student);
-				studentList.add(student);
-			}
-			case "중학생" -> {
-				Course<MiddleStudent> course = (Course<MiddleStudent>) selectedCourse;
-				List<MiddleStudent> students = (List<MiddleStudent>)selectedCourse.getStudents();
-				MiddleStudent student = new MiddleStudent(name);
-				students.add(student);		
-				studentList.add(student);
-			}
-			case "고등학생" -> {
-				Course<HighStudent> course = (Course<HighStudent>) selectedCourse;
-				List<HighStudent> students = (List<HighStudent>)selectedCourse.getStudents();
-				HighStudent student = new HighStudent(name);
-				students.add(student);
-				studentList.add(student);
-			}
-			default-> throw new IllegalArgumentException("Unexpected value: " + type);
-		};
-		
-		
-		
-		
+			studentList.add(newStudent);		// 원생 추가
+		} catch (Exception e) {
+			System.err.println(courseType + " 과정에 " + type + "(을/를) 등록할 수 없습니다.");
+		}
 	}
 	/**
 	 * 	수강생 확인

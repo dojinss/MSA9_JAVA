@@ -20,6 +20,10 @@ public class Course<T> implements Manager{
 		this.students = students;
 	}
 	// 메소드 Methods
+	public void addStudent(T t) {
+		getStudents().add(t);
+	}
+	
 	@Override
 	public Course<?> createCourse(String name, Course<Person> course) {
 		course.setName(name);
